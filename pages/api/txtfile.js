@@ -21,9 +21,12 @@ export default async function handler(req, res) {
       if (!req.body) {
         throw Error("Body is NULL");
       }
-      const { texts } = JSON.parse(req.body);
+      const { texts, iteration } = JSON.parse(req.body);
+      console.log(texts, iteration);
       const x = await Text.findOne({});
-      x.data = texts;
+      if (texts) x.data = JSON.stringify({ ...JSON.parse(x.data), texts });
+      else if (iteration)
+        x.data = JSON.stringify({ ...JSON.parse(x.data), iteration });
       await x.save();
       res.json("OK");
     } catch (error) {
